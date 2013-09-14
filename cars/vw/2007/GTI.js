@@ -5,6 +5,17 @@ module.exports = {
   mass : 1336, // mass, kg
   mass_front_pct: 0.61,
 
+  // via http://hyperphysics.phy-astr.gsu.edu/hbase/icyl.html, with
+  // a = 0.2 m, b = 0.3m, M = 20 kg --> I_wheel = 0.5, I_sum = 2
+  I_R_2_wheels: 50, // kg*m^2/m^2 --> kg, can be summed with mass in energy eq
+
+  // via http://www.golfmk6.com/forums/showthread.php?t=4088 +
+  // http://www.8thcivic.com/forums/wheel-tire-upgrades/160112-tire-weight-225-45-17-toyo-proxes-4-a.html
+  // assuming wheels = 24 lbs, tires = 23 lbs
+  mass_wheel_and_tires: 21, // kg
+  mass_flywheel: 9, // kg
+  rad_fw: 0.114, // meters
+
   // via http://en.wikipedia.org/wiki/Automobile_drag_coefficient
   C_d : 0.32, // coefficient of drag
   // via http://www.golfmkv.com/forums/showthread.php?t=163575
@@ -36,7 +47,7 @@ module.exports = {
       5.7918,
       4.334,
       3.4299,
-      2.8737
+     2.8737
     ],
 
     getRatio: function(forGear) {
@@ -51,7 +62,8 @@ module.exports = {
 
 
   engine: {
-    // via http://www.automobilemag.com/features/0712_2007_volkswagen_mkv_gti_2008_r32_comparison/photo_10.html
+    // via
+    // http://image.automobilemag.com/f/features/8046712+w799+h499+cr1+ar0/0712_09_z%2B2007_volkswagen_gti%2Btorque_curves.jpg
     torqueCurve : [
       {
         rpm: 1400,
@@ -66,8 +78,28 @@ module.exports = {
         lbft: 210
       },
       {
+        rpm: 3200,
+        lbft: 209
+      },
+      {
+        rpm: 4000,
+        lbft: 200
+      },
+      {
         rpm: 5000,
         lbft: 190
+      },
+      {
+        rpm: 5500,
+        lbft: 180
+      },
+      {
+        rpm: 6000,
+        lbft: 163
+      },
+      {
+        rpm: 6250,
+        lbft: 150
       },
       {
         rpm: 6400,
@@ -79,6 +111,9 @@ module.exports = {
       }
     ],
     rpm: 0,
+    getPower: function(_rpm) {
+      return this.getTorque(_rpm) * this.rpm /60 * 2 * constants.PI;
+    },
     getTorque : function(_rpm) {
       if (!_rpm) _rpm = this.rpm;
       var iAbove = -1;

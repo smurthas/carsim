@@ -15,6 +15,6 @@ var control = {
 }
 
 require('./simulator')(car, control).run(function(sim, point) {
-  //return sim.t > 7;
+  //return sim.t > 3;
   return point.s.value > 400 && point.v.value > 50;
 });
